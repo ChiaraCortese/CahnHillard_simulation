@@ -4,6 +4,11 @@ This repository contains the material produced for the exam "Software and Comput
 
 ## Spinodal decomposition and Cahn-Hilliard equation
 
+Spinodal decomposition is a mechanism by which a solution of two or more components
+can separate into distinct phases with distinctly different chemical compositions and
+physical properties.
+It's a continuous phase transformation that arise from instability of the order parameter of the transformation. In spinodal decomposition, the order parameter is a conserved quantity such as the concentration of species A and B in a binary alloy.
+
 ## Phase-field modelling of microstructures
 
 ## Structure of the project
