@@ -33,8 +33,10 @@ def create_initial_config(Nx, Ny, c_0, c_noise):
 
     np.random.seed(1)
     initState = c_0 + c_noise*(0.5-rand(Nx, Ny)) 
-
-    if initState.any() < 0 or initState.any() > 1:
-        raise ValueError('Invalid combination of c_0 and c_noise: negative concentrations occurred')
+    
+    for c in initState:
+        for cc in c:
+            if cc<0 or cc>1:
+                raise ValueError('Invalid combination of c_0 and c_noise: negative concentrations occurred')
     
     return initState
