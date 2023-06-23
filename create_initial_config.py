@@ -27,7 +27,9 @@ def create_initial_config(Nx, Ny, c_0, c_noise):
     if Nx < 1 or Ny < 1:
         raise ValueError('Both dimensions of the lattice must be > 1.')
     if c_0 < 0 or c_0 > 1:
-        raise ValueError('Unperturbed concentration must be >0.')
+        raise ValueError('Unperturbed concentration must be in [0,1].')
+    if c_noise < 0 or c_noise > 1:
+        raise ValueError('Concentration fluctuation must be in [0,1].')
 
     np.random.seed(1)
     initState = c_0 + c_noise*(0.5-rand(Nx, Ny)) 
