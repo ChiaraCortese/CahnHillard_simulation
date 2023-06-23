@@ -22,6 +22,8 @@ def create_initial_config(Nx, Ny, c_0, c_noise):
     Raise:
         ValueError if the supercell dimensions are less than 1 or not integer numers, if C_0 or c_noise 
         are not in [0,1], or if any of the initialized subcells' concentration is not in [0,1]"""
+    
+    #check validity of input parameters
     if not isinstance(Nx, int) or not isinstance(Ny, int):
         raise TypeError('Nx or Ny values must be integer numbers.')
     if Nx < 1 or Ny < 1:
@@ -31,9 +33,13 @@ def create_initial_config(Nx, Ny, c_0, c_noise):
     if c_noise < 0 or c_noise > 1:
         raise ValueError('Concentration fluctuation must be in [0,1].')
 
+    #make the initial configuration repeatable
     np.random.seed(1)
+    
+    #create initial configuration with noise described by uniform distribution of mean value c_noise
     initState = c_0 + c_noise*(0.5-rand(Nx, Ny)) 
     
+    #check validity of initial configuration
     for c in initState:
         for cc in c:
             if cc<0 or cc>1:
