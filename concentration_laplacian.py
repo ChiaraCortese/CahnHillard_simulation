@@ -12,9 +12,9 @@ def concentration_laplacian(c, dx, dy):
     c: Ny-by-Nx array of float numbers 
        concentration field of 2D microstructure formed by Nx times Ny subcells
     dx: float
-        derivatives step in x direction, must be equal to at least the x-dimension of a concentration subcell
+        dimension in x direction of a concentration subcell
     dy: float
-        derivatives step in y direction, must be equal to at least the y-dimension of a concentration subcell
+        dimension in y direction of a concentration subcell
         
     Returns:
     c_laplacian: Nx-by-Ny array of float numbers

@@ -23,7 +23,7 @@ def test_if_c_is_const_c_laplacian_is_0(N, dx, dy,c):
 
 @given(N=st.integers(min_value=2, max_value=100), dx=st.floats(max_value=0.), dy=st.floats(max_value=0.))
 def test_initState_fails_for_incorrect_dxdy_parameters(N, dx, dy):
-    """this function tests that if incorrect Nx, Ny parameters are given to create_initial_config(), 
+    """this function tests that if incorrect N, dx,dy parameters are given to concentration_laplacian(), 
        the function raises an error
 
        GIVEN: N randomly picked real numbers, dx, dy float numbers lower than 0
@@ -43,8 +43,7 @@ def test_concentration_laplacian_returns_correct_values():
        
        GIVEN : 3-by-3 matrix c0 of integer values, dx = 1, dy=1
        WHEN: they are provided as parameters to concentration_laplacian()
-       THEN: function returns the values expected by handmade calculations
-       """
+       THEN: function returns the values expected by handmade calculations"""
 
     N = 3
     dx = 1.
