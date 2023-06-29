@@ -38,4 +38,10 @@ def Cahn_Hilliard_equation_integration(c, A, k, dx, dy, M, dt):
     #Compute concentration grid after time dt
     c_updated = c + dt*M*concentration_laplacian((chem_potential-gradient_term), dx, dy)
 
+    #check validity of output configuration
+    for j in c_updated:
+        for i in j:
+            if i<0 or i>1:
+                raise ValueError('Invalid concentration configuration: check again input parameters. Remember that the concentration perturbation should be small!')
+
     return c_updated
