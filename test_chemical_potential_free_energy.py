@@ -66,8 +66,8 @@ def test_chemical_potential_returns_expected_values():
     chem_pot_computed = chemical_potential(c, A)
     chem_pot_expected = np.array([[0, 0],
                               [0, 0]])
-    for i in [0,N-1]:
-        for j in [0,N-1]:
+    for i in range(0,N):
+        for j in range(0,N):
             assert chem_pot_computed[i,j] == chem_pot_expected[i,j]
 
 def test_free_energy_returns_expected_value():

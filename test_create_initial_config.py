@@ -17,8 +17,8 @@ def test_initState_is_c_0_if_noise_is_0(N, c_0):
     constant_array=np.full((N,N), c_0)
     initial_config=create_initial_config(N,c_0, c_noise)
     assert np.shape(initial_config) == (N, N)
-    for i in [0,N-1]:
-      for j in [0,N-1]:
+    for i in range(0,N):
+      for j in range(0,N):
          assert  constant_array[i,j] == initial_config[i,j]
 
 @given(c_0=st.floats(min_value=0, max_value=1), c_noise=st.floats(min_value=0, max_value=1), N = st.floats())
@@ -81,6 +81,6 @@ def test_initState_is_repeatable():
    c_noise=0.02
    initState_1 = create_initial_config(N, c_0, c_noise)
    initState_2 = create_initial_config(N, c_0, c_noise)
-   for i in [0,N-1]:
-      for j in [0,N-1]:
-         assert  initState_1[i,j] == initState_2[i,j]
+   for i in range(0,N):
+      for j in range(0,N):
+         assert  initState_1[j, i] == initState_2[j, i]

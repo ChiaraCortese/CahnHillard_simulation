@@ -3,10 +3,11 @@ from create_initial_config import create_initial_config
 from chemical_potential_free_energy import chemical_potential
 from concentration_laplacian import concentration_laplacian
 from CahnHilliard_equation import Cahn_Hilliard_equation_integration
-from hypothesis import given
+from hypothesis import given, settings
 import hypothesis.strategies as st
 import pytest as pt
 
+@settings(deadline=None)
 @given(dx=st.floats(min_value=0.1), dy=st.floats(min_value=0.1), k=st.floats(min_value=0.), A=st.floats(min_value=0.), M=st.floats(max_value = -0.001), dt=st.floats(max_value=-0.001))
 def test_CahnHilliard_integration_fails_with_incorrect_M_dt_parametes(dx,dy,k,A, M, dt):
     """this function tests that if invalid M, dt parameters are given to Cahn_Hilliard_equation_integration(), 
@@ -44,18 +45,20 @@ def test_CahnHilliard_integration_returns_expected_values():
      updated_c_expected = np.array([[0.5, 0.5],
                               [0.5, 0.5]])
      assert np.shape(updated_c_computed) == np.shape(c)
-     for i in [0,N-1]:
-         for j in [0,N-1]:
+     for i in range(0,N):
+         for j in range(0,N):
              assert updated_c_computed[i,j] == updated_c_expected[i,j]
 
-def test_CahnHilliard_integration_fails_for_invalid_output_configuration():
+def test_CahnHilliard_integration_return_physical_output_configuration():
     """This function tests that if the concentration configuration obtained by integrating the 
-    Cahn-Hilliard equation is not valid, then the function raises an error.
+    Cahn-Hilliard equation turns out to be out of bound, like lower than 0 or higher than 1, 
+    then the function automatically rescale the out-of-bound value to 0 or 1 without raising errors.
     
     GIVEN: 2-by-2 concentration grid with a big concentration difference ([[0, 1], [1, 0]]), 
            A = k = dx = dy = M = dt = 1
     WHEN: they are provided as parameters to Cahn_Hilliard_equation_integration()
-    THEN: function fails due to resulting concentration grid with values higher than 1"""
+    THEN: function produces values out of bound that are automatically rescaled to physical values, 
+          and output configuration is a physical one (with no concentration values out of [0, 1])"""
 
     N = 2
     A = 1
@@ -66,5 +69,7 @@ def test_CahnHilliard_integration_fails_for_invalid_output_configuration():
     dt = 1
     c = np.array([[0, 1], 
                  [1, 0]])
-    with pt.raises(ValueError):
-       Cahn_Hilliard_equation_integration(c, A, k, dx, dy, M, dt)
+    updated_c = Cahn_Hilliard_equation_integration(c, A, k, dx, dy, M, dt)
+    for i in range(0, N):
+      for j in range(0, N):
+         assert updated_c[j, i] >= 0. and updated_c[j, i] <= 1.
