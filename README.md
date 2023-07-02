@@ -13,9 +13,10 @@ where $M$ is the mobility of species B, and $\Phi(\vec r)$ is a generalized diff
 $$\Phi (\vec r) = \mu - 2k\nabla^2 c(\vec r) = \frac{\partial f^{hom}}{\partial c} - 2k\nabla^2 c(\vec r)$$,
 where $k$ is a coefficient depending on the species involved, while $\mu$ was substitued using its relation with the free energy $f^{hom}$ of the homogeneous mixture case.
 Since the $c$ is a locally-conserved quantity, the continuity equation also holds:
-$$ \frac{\partial c}{\partial t} + \vec \nabla \cdot \vec J_B = 0$$.
+$$ \frac{\partial c}{\partial t} + \vec \nabla \cdot \vec J_B = 0.$$
+
 By combining the two equations, we obtain the **Cahn-Hilliard equation**:
-$$ \frac{\partial c}{\partial t} = \vec \nabla \cdot \Bigl{ M\vec \nabla \Bigl[ \frac{\partial f^{hom}}{\partial c} - 2k\nabla^2 c(\vec r)\Bigr]\Bigr}$$
+$$ \frac{\partial c}{\partial t} = \vec \nabla \cdot \Bigl { M\vec \nabla \Bigl [ \frac{\partial f^{hom}}{\partial c} - 2k\nabla^2 c(\vec r)\Bigr ]\Bigr }$$
 
 ## Phase-field modelling of microstructures
 
