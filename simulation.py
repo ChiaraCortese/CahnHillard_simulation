@@ -1,33 +1,42 @@
 import numpy as np
 import sys as sys
+import configparser as cp
 from chemical_potential_free_energy import chemical_potential, free_energy
 from CahnHilliard_equation import Cahn_Hilliard_equation_integration
 from create_initial_config import create_initial_config
 
-"-----------------------------------INPUT PARAMETERS-----------------------------------------------------"
+"-----------------------------READ SIMULATION CONFIGURATION FROM FILE------------------------------------"
+#Import configuration parameters from simulation_configuration.txt file
+config = cp.ConfigParser()
+config.read(sys.argv[1])
+
+"-----------------------------------INITIALIZE INPUT PARAMETERS-------------------------------------------"
 # Microstructure geometry
 
-N = 100               # number of subcells per cartesian direction -> grid of N-by-N subcells
-dx = 1.               # dimension of subcell in x direction
-dy = 1.               # dimension of subcell in y direction
+N = int(config.get('microstructure_settings', 'N'))            # number of subcells per cartesian direction
+dx = float(config.get('microstructure_settings', 'dx'))        # dimension of subcell in x direction
+dy = float(config.get('microstructure_settings', 'dy'))        # dimension of subcell in y direction
 
 #Material  specific parameters
 
-M = 1.                # mobility
-grad_coeff = 0.5      # gradient coefficient
-A = 1.                # multiplicative constant of free energy
+M = float(config.get('microstructure_settings', 'M'))                         # mobility
+grad_coeff = float(config.get('microstructure_settings', 'grad_coeff'))       # gradient coefficient
+A = float(config.get('microstructure_settings', 'A'))                         # multiplicative constant of free energy
 
 # Concentration parameters
 
-c0 = 0.5              # initial equilibrium concentration
-c_noise = 0.02        # perturbation amplitude -> IMPORTANT: should be an order of magnitude lower than c0
+c0 = float(config.get('microstructure_settings', 'c0'))               # initial equilibrium concentration
+c_noise = float(config.get('microstructure_settings', 'c_noise'))     # perturbation amplitude
 
 # Time integration parameters
 
-t0 = 0.               # starting time
-dt = 0.01             # time step
-n_iterations = 5000   # number of time steps
+t0 = float(config.get('time_settings', 't0'))                # starting time
+dt = float(config.get('time_settings', 'dt'))            # time step
+n_iterations = int(config.get('time_settings', 'n_iterations'))   # number of time steps
 
+# Destinations for data saving
+c_grid_datasave = config.get('data_paths', 'c_config_datasave')
+aver_quantities_datasave = config.get('data_paths', 'aver_quantities_datasave')
 "----------------------------------CREATE INITIAL STATE--------------------------------------------------------"
 # Build initial microstructure concentration grid
 
@@ -41,7 +50,7 @@ average_c = np.sum(c)/(N*N)
 
 "-----------------------------------PREPARE FILES TO STORE SIMULATED DATA---------------------------------"
 #open file to write the simulated concentration data
-data_config_file = open("Data/configurations.txt", "w")
+data_config_file = open(c_grid_datasave, "w")
 column_names_string = "Time "
 
 #write column names
@@ -58,7 +67,7 @@ for l in range(0, N):
 data_config_file.write("\n")
 
 #open file to write separately average concentration, average chem. potential and free energy
-data_average_param_file = open("Data/average_parameters.txt", "w")
+data_average_param_file = open(aver_quantities_datasave, "w")
 column_names_string = "Time AverageConcentration AverageChem.Potential FreeEnergy\n"
 data_average_param_file.write(column_names_string)
 
@@ -95,6 +104,10 @@ for i in range(1,n_iterations+1):
 
     #print simulation status on the command line
     sys.stdout.write("\r Simulation running: "+"{:.1f}".format(i/n_iterations*100)+"%")
+
+#Close data files
+data_config_file.close()
+data_average_param_file.close()
 
 
 

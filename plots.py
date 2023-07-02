@@ -1,11 +1,27 @@
 import numpy as np
+import sys as sys
+import configparser as cp
 import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 import time as time
 
+"-----------------------------------IMPORT IMAGES PATHS------------------------------------------"
+#Import configuration parameters from simulation_configuration.txt file
+config = cp.ConfigParser()
+config.read(sys.argv[1])
+
+# Destinations for image saving
+initial_c_grid_pic = config.get('image_paths', 'initial_c_grid_pic')
+final_c_grid_pic = config.get('image_paths', 'final_c_grid_pic')
+other_variables_pic = config.get('image_paths', 'other_variables_pic')
+
+# Data files paths
+c_grid_datasave = config.get('data_paths', 'c_config_datasave')
+aver_quantities_datasave = config.get('data_paths', 'aver_quantities_datasave')
+
 "---------------------------------IMPORT DATA FROM FILES-----------------------------------------"
 #Read concentration data from file
-concentration_evolution = np.loadtxt("Data/configurations.txt", skiprows=1)
+concentration_evolution = np.loadtxt(c_grid_datasave, skiprows=1)
 
 #Separate time indicator
 t_concentration = concentration_evolution[:, 0]
@@ -19,7 +35,7 @@ Nx = int(np.sqrt(N - 1))
 c = concentration_evolution[:,1:N].reshape(n_iterations,Nx,Nx)
 
 #Read average quantities data from file
-t_average, average_c, average_chem_potential, free_energy = np.loadtxt("Data/average_parameters.txt", skiprows=1, unpack=True)
+t_average, average_c, average_chem_potential, free_energy = np.loadtxt(aver_quantities_datasave, skiprows=1, unpack=True)
 
 "--------------------------------------PLOT CONCENTRATION DATA-------------------------------------------------"
 #Create figure and subplot
@@ -44,7 +60,7 @@ ax1.set_title("Concentration grid: t = "+"{:.2f}".format(t_concentration[0])+" a
 
 #Save initial configuration as .jpg image
 
-plt.savefig('Images/initial_concentration_grid.jpg')
+plt.savefig(initial_c_grid_pic)
 
 #Enable interactive mode and show plot
 plt.ion()
@@ -63,7 +79,7 @@ for i in range(1,n_iterations):
     time.sleep(0.001)
 
 #Save final concentration grid
-plt.savefig('Images/final_concentration_grid.jpg')
+plt.savefig(final_c_grid_pic)
 
 "-----------------------------------------PLOT AVERAGE QUANTITIES-------------------------------------"
 
@@ -96,4 +112,4 @@ axs[2].set_xlabel("Time (arb.units)")
 axs[2].set_ylabel("Average chem. potential (arb.units)")
 
 #Save plots
-plt.savefig('Images/average_quantities_time_evol.jpg')
+plt.savefig(other_variables_pic)

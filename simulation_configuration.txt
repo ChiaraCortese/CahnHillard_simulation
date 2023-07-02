@@ -1,0 +1,25 @@
+#FILE TO CONFIGURATE THE SIMULATION PARAMETERS
+
+[microstructure_settings]
+N = 100               
+dx = 1.               
+dy = 1.          
+M = 1.                
+grad_coeff = 0.5      
+A = 1.                
+c0 = 0.5              
+c_noise = 0.02
+
+[time_settings]
+t0 = 0.               
+dt = 0.01             
+n_iterations = 5000
+
+[data_paths]
+c_config_datasave: ./Data/configurations.txt
+aver_quantities_datasave: ./Data/average_parameters.txt
+
+[image_paths]
+initial_c_grid_pic: ./Images/initial_concentration_grid.jpg
+final_c_grid_pic: ./Images/final_concentration_grid.jpg
+other_variables_pic: ./Images/average_quantities_time_evol.jpg
