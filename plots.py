@@ -65,41 +65,35 @@ for i in range(1,n_iterations):
 #Save final concentration grid
 plt.savefig('Images/final_concentration_grid.jpg')
 
-#Show final plot
-plt.show()
-
 "-----------------------------------------PLOT AVERAGE QUANTITIES-------------------------------------"
 
 #Create new figure and subplots
 
-fig, axs = plt.subplots(2,2)
+fig, axs = plt.subplots(3, sharex=True, figsize=(7,10))
 
 #Set figure title
 fig.suptitle('Spinodal decomposition', fontsize=16)
 
 #Plot free energy vs. time
-axs[0,0].scatter(t_average, free_energy, c="blue")
+axs[0].scatter(t_average, free_energy, c="blue")
 #Set axis and title
-axs[0,0].set_title("Free energy time evolution")
-axs[0,0].set_xlabel("Time (arb.units)")
-axs[0,0].set_ylabel("Free energy (arb.units)")
+axs[0].set_title("Free energy time evolution")
+axs[0].set_xlabel("Time (arb.units)")
+axs[0].set_ylabel("Free energy (arb.units)")
 
 #Plot average concentration vs. time
-axs[0,1].scatter(t_average, average_c, c="green")
+axs[1].scatter(t_average, average_c, c="green")
 #Set axis and title
-axs[0,1].set_title("Average concentration time evolution")
-axs[0,1].set_xlabel("Time (arb.units)")
-axs[0,1].set_ylabel("Average concentration")
+axs[1].set_title("Average concentration time evolution")
+axs[1].set_xlabel("Time (arb.units)")
+axs[1].set_ylabel("Average concentration")
 
 #Plot free energy vs. time
-axs[1,0].scatter(t_average, average_chem_potential, c="red")
+axs[2].scatter(t_average, average_chem_potential, c="red")
 #Set axis and title
-axs[1,0].set_title("Average chemical potential time evolution")
-axs[1,0].set_xlabel("Time (arb.units)")
-axs[1,0].set_ylabel("Average chem. potential (arb.units)")
+axs[2].set_title("Average chemical potential time evolution")
+axs[2].set_xlabel("Time (arb.units)")
+axs[2].set_ylabel("Average chem. potential (arb.units)")
 
 #Save plots
 plt.savefig('Images/average_quantities_time_evol.jpg')
-
-#Show plots
-plt.show()
