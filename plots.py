@@ -50,7 +50,7 @@ plt.savefig('Images/initial_concentration_grid.jpg')
 plt.ion()
 plt.show()
 
-for i in range(1,n_iterations+1):
+for i in range(1,n_iterations):
     #Update concentration grid plot data
     im.set_data(c[i])
     #
@@ -60,7 +60,7 @@ for i in range(1,n_iterations+1):
     # flush GUI events
     fig.canvas.flush_events()
     #Pause
-    time.sleep(0.01)
+    time.sleep(0.001)
 
 #Save final concentration grid
 plt.savefig('Images/final_concentration_grid.jpg')
