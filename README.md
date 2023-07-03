@@ -32,9 +32,11 @@ In this project, I modeled a 2D microstructure as
 
 ## Structure of the project
 
-The project is divided in 5 blocks:
-- the [simulation_configuration.txt] file, where I inserted all the simulation parameters customizable by the user (further discussion is the next section), so that if the user wants to run the simulation with different parameters, it is sufficient to modify the configuration file without changing the simulation main code 
-- simulation 
+The project is divided into 5 blocks:
+- the [simulation_configuration.txt](https://github.com/ChiaraCortese/CahnHilliard_simulation/blob/main/simulation_configuration.txt) file, where I inserted all the simulation parameters customizable by the user (further discussion is the next section), so that if the user wants to run the simulation with different parameters, it is sufficient to modify the configuration file without changing the simulation main code
+- the [create_initial_config.py], which hosts a homonymous function returning a 2D array whose elements represent the values of the initial concentration grid.
+- the [chemical_potential_free_energy.py], [concentration_laplacian.py], where I wrote the functions dedicated to computing the laplacian of the concentration grid and to compute the free energy and the chemical potential as described above
+- the [simulation.py], the core part of the simulation, where the simulation configuration parameters are read using ConfigParser,  
 
 ## How to run the simulation and plot the results 
 
