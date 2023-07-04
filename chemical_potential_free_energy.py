@@ -34,9 +34,9 @@ def free_energy(c, A, k, dx, dy):
     F_homogeneous = dx*dy*A*np.sum(c*c*(1-c)*(1-c))
 
     #compute gradient term using forward finite difference to compute the derivatives:
-     #in first and last element of each row and column would not be possible to do finite difference derivative,
-     #so use the element at the other edge of the supercell to compute the difference, 
-     #as if the supercell was closed with opposite edges connected.
+     #to simulate a periodic structure of unit cell equal to the simulated microstructure, for edge elements
+     #use the element at the other edge of the supercell to compute the difference, 
+     #as if the supercell was closed with opposite edges connected
     c_y_minus_dy_elements = np.vstack([c[Ny-1,:],c[0:Ny-1,:]])
     c_x_minus_dx_elements = np.hstack([c[:,Nx-1].reshape((Nx,1)), c[:,0:Nx-1]])
     F_gradient = (k/(dx)**2)*np.sum((c-c_x_minus_dx_elements)**2) + (k/(dy)**2)*np.sum((c-c_y_minus_dy_elements)**2)

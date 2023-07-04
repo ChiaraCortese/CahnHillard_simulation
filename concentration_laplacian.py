@@ -28,8 +28,8 @@ def concentration_laplacian(c, dx, dy):
     Ny, Nx = np.shape(c)
     #c_laplacian = np.zeros((Ny,Nx))
      
-     #in first and last element of each row and column would not be possible to do symmetric derivative,
-     #so use the element at the other edge of the supercell to compute the difference, 
+     #to simulate a periodic structure of unit cell equal to the simulated microstructure, for edge elements,
+     #use the element at the other edge of the supercell to compute the difference, 
      #as if the supercell was closed with opposite edges connected
     c_y_plus_dy_elements = np.vstack([c[Ny-1,:],c[0:Ny-1,:]])
     c_y_minus_dy_elements = np.vstack([c[1:Ny,:],c[0,:]])
