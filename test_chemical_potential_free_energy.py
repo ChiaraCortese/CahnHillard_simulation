@@ -26,9 +26,9 @@ def test_chemical_potential_returns_array_of_same_shape_of_input_array(A, N):
     """this function tests that chemical_potential() returns an array of shape equal 
     to the input concentration c.
     
-       GIVEN: A positive float number, c elements all equal to 0.5, supercell of dimension N-by-N
+       GIVEN: A positive float number A, c elements all equal to 0.5, supercell of dimension N-by-N
        WHEN: they are provided as parameters to chemical_potential()
-       THEN: chemical_potential() returns an array of shape (N,N) with all elements equal to zero"""
+       THEN: chemical_potential() returns an array of shape (N,N)"""
     c_0=0.5
     c_noise=0.02
     c=create_initial_config(N,c_0, c_noise)
@@ -75,8 +75,8 @@ def test_free_energy_returns_expected_value():
     returns the correct free energy value of the system 
     
     GIVEN: a 2-by-2 concentration grid with either 0 or 1 values, and A=1, k=1, dx=dy=1,
-    WHEN: they are provided as input parameters to chemical_potential(),
-    THEN: free_energy() returns a float that is exactly equal to the manually computed, and thus expected, value"""
+    WHEN: they are provided as input parameters to free_energy(),
+    THEN: free_energy() returns a float that is exactly equal to the manually calculated  value"""
     
     N = 2
     A = 1

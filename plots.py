@@ -69,7 +69,7 @@ plt.show()
 for i in range(1,n_iterations):
     #Update concentration grid plot data
     im.set_data(c[i])
-    #
+    #Update concentration plot title
     ax1.set_title("Concentration grid: t = "+"{:.2f}".format(t_concentration[i])+" arb.units")
     #redraw figure
     fig.canvas.draw_idle()
@@ -104,7 +104,7 @@ axs[1].set_title("Average concentration time evolution")
 axs[1].set_xlabel("Time (arb.units)")
 axs[1].set_ylabel("Average concentration")
 
-#Plot free energy vs. time
+#Plot average chemical potential vs. time
 axs[2].scatter(t_average, average_chem_potential, c="red")
 #Set axis and title
 axs[2].set_title("Average chemical potential time evolution")

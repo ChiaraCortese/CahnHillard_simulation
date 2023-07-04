@@ -26,7 +26,6 @@ def concentration_laplacian(c, dx, dy):
     
     #create c_laplacian output array of same shape of c
     Ny, Nx = np.shape(c)
-    #c_laplacian = np.zeros((Ny,Nx))
      
      #to simulate a periodic structure of unit cell equal to the simulated microstructure, for edge elements,
      #use the element at the other edge of the supercell to compute the difference, 
