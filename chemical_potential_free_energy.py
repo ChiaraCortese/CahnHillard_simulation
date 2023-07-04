@@ -39,7 +39,7 @@ def free_energy(c, A, k, dx, dy):
      #as if the supercell was closed with opposite edges connected.
     c_y_minus_dy_elements = np.vstack([c[Ny-1,:],c[0:Ny-1,:]])
     c_x_minus_dx_elements = np.hstack([c[:,Nx-1].reshape((Nx,1)), c[:,0:Nx-1]])
-    F_gradient = (k/dx)*np.sum((c-c_x_minus_dx_elements)**2) + (k/dy)*np.sum((c-c_y_minus_dy_elements)**2)
+    F_gradient = (k/(dx)**2)*np.sum((c-c_x_minus_dx_elements)**2) + (k/(dy)**2)*np.sum((c-c_y_minus_dy_elements)**2)
 
     free_energy = F_homogeneous + F_gradient
 
