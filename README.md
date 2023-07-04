@@ -12,11 +12,13 @@ Given a mixture of two components A and B, with concentrations respectively $(1-
 $$\vec J_B = -M\vec \nabla \Phi (\vec r),$$
 where $M$ is the average mobility of species B, and $\Phi(\vec r)$ is a generalized diffusion potential that to the diffusive term of the homogeneous mixture case, governed by the chemical potential $\mu$, adds a penalty due to the clustering going against the concentration gradient at the diffuse interface:
 $$\Phi (\vec r) = \mu - 2k\nabla^2 c(\vec r) = \frac{\partial f^{hom}}{\partial c} - 2k\nabla^2 c(\vec r),$$
-where $k$ is a coefficient depending on the species involved, while $\mu$ was substitued using its relation with the free energy $f^{hom}$ of the homogeneous mixture case.
+where $k$ is a coefficient depending on the species involved, while $\mu$ was substitued using its relation with the free energ density $f^{hom}$ of the homogeneous mixture case. As for the system free energy $F$, its relation with $f^{hom}$ and $\vec \nabla c(\vec r)$ is:
+$$F = \int_{volume} \Bigl[ f^{hom}(c) + k(\vec \nabla c)^2\Bigr] dV$$
+
 Since the $c$ is a locally-conserved quantity, the continuity equation also holds:
 $$\frac{\partial c}{\partial t} + \vec{\nabla} \cdot \vec{J}_B = 0.$$
 
-By combining the two equations, we obtain the **Cahn-Hilliard equation**:
+By combining the diffusion and continuity equations, we obtain the **Cahn-Hilliard equation**:
 $$\frac{\partial c}{\partial t} = \vec{\nabla} \cdot \Bigl\lbrace M\vec{\nabla} \Bigl( \frac{\partial f^{hom}}{\partial c} - 2k\nabla^2 c(\vec r)\Bigr)\Bigr\rbrace.$$
 
 This derivation relies on phase-field modeling: with this method, a microstructure with compositional and/or structural domains, and thus interfaces, is described as a whole with a set of field variables. The field variables are assumed to be continuous across the interfacial regions. Common field variables are the local composition and the interface orientation.
@@ -28,11 +30,26 @@ For more info on phase-field modeling, check [this](https://doi.org/10.1146/annu
 
 ### Numerical integration of the Cahn-Hilliard equation
 
-In this project, I modeled a 2D microstructure as
+In this project, I modeled a 2D microstructure as an N-by-N grid of subcells, each of dimensions $dx$ and $dy$. Each subcell was initiated to a random value $c$ in [ $c_0 -c_{noise}$ , $c_0 +c_{noise}$], where $c_0$ is the unperturbed concentration value and $c_{noise}$ the amplitude of the perturbation. To compute the free energy, I used the following expression:
+$$F = F_{hom} + F_{grad},$$
+with
+$$F_{hom}= A \sum_{i=1}^N \sum_{j=1}^N dx \cdot dy \cdot c_{ij}^2 (1-c_{ij})^2,$$
+where $A$ is a multiplicative constant and the indices $i,j$ identify a specific grid subcell, and
+$$F_{grad} = k \Bigl[ \sum_{j=1}^N \sum_{i=1}^N \Bigl(\frac{c_{i, j}-c_{i-1, j}}{dx}\Bigr)^2 + \sum_{i=1}^N \sum_{j=1}^N \Bigl(\frac{c_{i, j}-c_{i, j-1}}{dy}\Bigr)^2 \Bigr],$$
+where the gradient was computed using the finite difference method, and periodic boundary conditions were applied to the grid edges' values to simulate a periodic 2D structure with a unit cell equal to the microstructure.
+The chemical potential grid was computed directly from the homogeneous free energy density:
+$$\mu_{i,j} = \frac{\partial f^{hom}}{\partial c_{i,j}} = 2A\Bigl(c_{i,j}(1-c_{i,j})^2 - c_{i.j}^2(1-c_{i,j})\Bigr).$$
+
+As for the laplacian of the concentration grid, the symmetric finite difference method was used:
+$$\nabla^2 c_{i,j} = \frac{c_{i+1,j}+ c_{i-1,j}-2c_{i,j}}{dx^2} + \frac{c_{i,j+1}+ c_{i,j-1}-2c_{i,j}}{dy^2}.$$
+
+All of this was then combined to numerically integrate the Cahn-Hilliard equation for each subcell microstructure:
+$$c_{i,j} (t+dt) = c_{i,j}(t) + dt \cdot M \nabla^2 \Bigl[ \mu_{i,j}(t) - 2k\nabla^2 c_{i,j}(t)\Bigr], $$
+where the laplacian of the quantity in square brackets was computed with the same method used for the concentration one.
 
 ## Structure of the project
 
-The project is divided into [tot] blocks:
+The project is divided into 7 blocks:
 - the [simulation_configuration.txt](https://github.com/ChiaraCortese/CahnHilliard_simulation/blob/main/simulation_configuration.txt) file, where I inserted all the simulation parameters customizable by the user (for a complete description, see the next section) so that if the user wants to run the simulation with different parameters, it is sufficient to modify the configuration file without changing the simulation main code;
 - the [create_initial_config.py](https://github.com/ChiaraCortese/CahnHilliard_simulation/blob/main/create_initial_config.py), which hosts a homonymous function returning a 2D array whose elements represent the values of the initial concentration grid;
 - the [chemical_potential_free_energy.py](https://github.com/ChiaraCortese/CahnHilliard_simulation/blob/main/chemical_potential_free_energy.py), [concentration_laplacian.py](https://github.com/ChiaraCortese/CahnHilliard_simulation/blob/main/concentration_laplacian.py), where I wrote the functions dedicated to computing the laplacian of the concentration grid and to compute the free energy and the chemical potential as described in the previous section;
@@ -49,7 +66,7 @@ The project is divided into [tot] blocks:
 To successfully run the simulation, follow these steps:
 1. Configure the simulation by changing the [simulation_configuration.txt](https://github.com/ChiaraCortese/CahnHilliard_simulation/main/simulation_configuration.txt) file. The file hosts all the values of the parameters introduced in the previous section, plus the local paths where the simulated data and the images will be stored:
    - N: number of subcells per grid dimension, must be an integer number >2
-   - dx, dy: dimensions of the single subcells, must be positive float numbers
+   - dx, dy: dimensions of the single subcells, must be positive float numbers (and in general better to keep them =1.0)
    - M: average mobility of the B species, must be a non-negative float number
    - grad_coefficient: coefficient of the gradient term of the generalized diffusion potential, must be a non-negative float number
    - A: multiplicative coefficient of the free energy, must be a non-negative float number
