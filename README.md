@@ -32,11 +32,17 @@ In this project, I modeled a 2D microstructure as
 
 ## Structure of the project
 
-The project is divided into 5 blocks:
-- the [simulation_configuration.txt](https://github.com/ChiaraCortese/CahnHilliard_simulation/blob/main/simulation_configuration.txt) file, where I inserted all the simulation parameters customizable by the user (further discussion is the next section), so that if the user wants to run the simulation with different parameters, it is sufficient to modify the configuration file without changing the simulation main code
-- the [create_initial_config.py], which hosts a homonymous function returning a 2D array whose elements represent the values of the initial concentration grid.
-- the [chemical_potential_free_energy.py], [concentration_laplacian.py], where I wrote the functions dedicated to computing the laplacian of the concentration grid and to compute the free energy and the chemical potential as described above
-- the [simulation.py], the core part of the simulation, where the simulation configuration parameters are read using ConfigParser,  
+The project is divided into [tot] blocks:
+- the [simulation_configuration.txt](https://github.com/ChiaraCortese/CahnHilliard_simulation/blob/main/simulation_configuration.txt) file, where I inserted all the simulation parameters customizable by the user (for a complete description, see the next section) so that if the user wants to run the simulation with different parameters, it is sufficient to modify the configuration file without changing the simulation main code;
+- the [create_initial_config.py](https://github.com/ChiaraCortese/CahnHilliard_simulation/blob/main/create_initial_config.py), which hosts a homonymous function returning a 2D array whose elements represent the values of the initial concentration grid;
+- the [chemical_potential_free_energy.py](https://github.com/ChiaraCortese/CahnHilliard_simulation/blob/main/chemical_potential_free_energy.py), [concentration_laplacian.py](https://github.com/ChiaraCortese/CahnHilliard_simulation/blob/main/concentration_laplacian.py), where I wrote the functions dedicated to computing the laplacian of the concentration grid and to compute the free energy and the chemical potential as described in the previous section;
+- the [CahnHilliard_equation.py](https://github.com/ChiaraCortese/CahnHilliard_simulation/blob/main/CahnHilliard_equation.py), which hosts the Cahn_Hilliard_equation_integration() function that, when given as input parameters a concentration grid, together with $M$, $k$, $A$, $N$, $dx$ and $dy$, and $\Delta t$, returns the configuration grid after a time $\Delta t$ obtained by integrating the Cahn-Hilliard equation as described in the previous section. For the integration, the functions in [chemical_potential_free_energy.py](https://github.com/ChiaraCortese/CahnHilliard_simulation/blob/main/chemical_potential_free_energy.py), [concentration_laplacian.py](https://github.com/ChiaraCortese/CahnHilliard_simulation/blob/main/concentration_laplacian.py) are imported. The separation of the files into different functions was done to test them separately.
+- the testing: each of the files cited above has a dedicated test, to ensure that all my functions work properly. I used hypothesis testing and checked the coverage with pytest-cov (reached coverage: 100%).
+- the [simulation.py](https://github.com/ChiaraCortese/CahnHilliard_simulation/blob/main/simulation.py), the core part of the simulation, where the simulation configuration parameters are read using ConfigParser, uses them to initialize the concentration grid through [create_initial_config.py](https://github.com/ChiaraCortese/CahnHilliard_simulation/blob/main/create_initial_config.py), and computes its free energy, average concentration, and average chemical potential using the functions in [chemical_potential_free_energy.py](https://github.com/ChiaraCortese/CahnHilliard_simulation/blob/main/chemical_potential_free_energy.py). Then, for each time step required by the user, it updates the computed values by calling the Cahn_Hilliard_equation_integration() and then recomputes the average values and free energy. From the initial configuration until the last one, all the concentration grid values are stored in a local dedicated file together with the time indication. The average quantities and free energy are saved in a separate local file, always with a time indication.
+- the [plots.py](https://github.com/ChiaraCortese/CahnHilliard_simulation/blob/main/plots.py), which retrieves from the local files the simulation data and:
+  1. plots all the concentration grid values as 2D images with a color scale to represent if the concentration value of a subcell is above or below the unperturbed concentration value. The images are plotted in interactive mode, so that the user can see in the GUI the time evolution of the grid values as an animation;
+  2. saves as .jpg files the initial and final concentration grid images
+  3. saves as a single .jpg file the free energy, average concentration, and average chemical potential vs. time plots.
 
 ## How to run the simulation and plot the results 
 
@@ -60,6 +66,16 @@ To successfully run the simulation, follow these steps:
 3. To launch the simulation from the command line, use the syntax **python simulation.py simulation_configuration.txt**. The configuration parameters will be read from the simulation_configuration.txt file using ConfigParser.
 4. To visualize the results of the simulation, launch from the command line the plot file using the syntax **python plots.py simulation_configuration.txt**. The concentration grid pictures will be shown one after another in an animation, to illustrate the changes during time evolution, with only the first and last pictures saved as .jpg images. The free energy, average chemical potential, and average concentration will be plotted as functions of time and saved in a separate file.
 
+Here is an example of the results obtained by running the simulation with the configuration in simulation_configuration.txt:
+1) Initial and final configuration
+
+   <img src="/Images/initial_concentration_grid.jpg" alt="Initial concentration grid" style="height: 240px; width:320px;"/>
+   <img src="/Images/final_concentration_grid.jpg" alt="Final concentration grid" style="height: 240px; width:320px;"/>
+
+3) Time evolution of free energy, average chemical potential and average concentration
+   
+   <img src="/Images/average_quantities_time_evol.jpg" alt="Average quantities time evolution" style="height: 500px; width:350px;"/>
+Note that as expected, the simulated spinodal decomposition process maintained the average concentration constant, thus conserving the order parameter, and it minimized the free energy.
 
 ## License
 
