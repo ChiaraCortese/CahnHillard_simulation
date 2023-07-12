@@ -39,12 +39,6 @@ def Cahn_Hilliard_equation_integration(c, A, k, dx, dy, M, dt):
     c_updated = c + dt*M*concentration_laplacian((chem_potential-gradient_term), dx, dy)
 
     #make sure output configuration is physical: reassign values lower than 0. to 0. and higher than 1. to 1.
-    Ny, Nx = np.shape(c)
-    for i in range(0,Nx):
-        for j in range(0,Ny):
-            if c_updated[j,i]<0. :
-               c_updated[j,i] = 0.0
-            if c_updated[j,i]>1. :
-               c_updated[j,i] = 1.0
+    np.clip(c_updated, 0, 1, out=c_updated)
                 
     return c_updated
