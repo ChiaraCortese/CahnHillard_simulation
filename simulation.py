@@ -36,15 +36,18 @@ n_iterations = int(config.get('time_settings', 'n_iterations'))   # number of ti
 
 # Seed option
 
-seed = int(config.get('simulation_seed', 'seed'))                 # simulation seed
+seed_option = bool(config.get('simulation_seed', 'seed_option'))   
+
+#if seed option is True, set seed specified by the user
+if seed_option:
+    seed = int(config.get('simulation_seed', 'seed'))
+    np.random.seed(seed)
 
 # Destinations for data saving
 
 c_grid_datasave = config.get('data_paths', 'c_config_datasave')
 aver_quantities_datasave = config.get('data_paths', 'aver_quantities_datasave')
 "----------------------------------CREATE INITIAL STATE--------------------------------------------------------"
-#Set seed
-np.random.seed(seed)
 
 # Build initial microstructure concentration grid
 

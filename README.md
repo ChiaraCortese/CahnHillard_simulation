@@ -16,7 +16,8 @@ To successfully run the simulation, follow these steps:
    - t0: initial time of the simulation, must be a non-negative float number
    - dt: time step in the Cahn-Hilliard equation integration, must be a non-negative float number
    - n_iterations: number of time steps to be performed during the simulation, must be an integer
-   - seed: specify a seed if you want your simulation to be repeatable; if you want a completely random simulation, use seed = None
+   - seed_option: set to True if you want to use a seed for your simulation, set to False if you want a completely random simulation
+   - seed: if previous option is set to True, specify the seed
    - c_config_datasave: path and filename to store the simulated concentration grid values
    - aver_quantities_datasave: path and filename to store the simulated free energy, average concentration and average chemical potential
    - initial_c_grid_pic: path and filename to save the initial concentration grid picture
