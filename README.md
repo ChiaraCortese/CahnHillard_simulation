@@ -30,6 +30,7 @@ For more info on the physical meaning of the simulation parameters, check the [T
 ### Requirements
 
 Python version: 3.8.12
+
 The additional packages required to successfully run the simulation are specified in [requirements.txt](https://github.com/ChiaraCortese/CahnHilliard_simulation/blob/main/requirements.txt)
 To install them automatically using pip, write in the command line **pip install -r requirements.txt**.
 
