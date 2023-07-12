@@ -44,15 +44,14 @@ def test_CahnHilliard_integration_returns_expected_values():
      updated_c_computed = Cahn_Hilliard_equation_integration(c, A, k, dx, dy, M, dt)
      updated_c_expected = np.array([[0.5, 0.5],
                               [0.5, 0.5]])
-     assert np.shape(updated_c_computed) == np.shape(c)
-     for i in range(0,N):
-         for j in range(0,N):
-             assert updated_c_computed[i,j] == updated_c_expected[i,j]
+     assert np.array_equal(updated_c_computed, updated_c_expected)
 
 def test_CahnHilliard_integration_return_physical_output_configuration():
     """This function tests that if the concentration configuration obtained by integrating the 
     Cahn-Hilliard equation turns out to be out of bound, like lower than 0 or higher than 1, 
     then the function automatically rescale the out-of-bound value to 0 or 1 without raising errors.
+    TEST WRITTEN AFTER FUNCTION RETURNING OUT-OF-BOUND CONCENTRATION VALUES FOR SPECIFIC INPUT VALUES, 
+    KEEP TO CHECK THAT THIS PROBLEM DO NOT REOCCUR
     
     GIVEN: 2-by-2 concentration grid with a big concentration difference ([[0, 1], [1, 0]]), 
            A = k = dx = dy = M = dt = 1
@@ -70,6 +69,5 @@ def test_CahnHilliard_integration_return_physical_output_configuration():
     c = np.array([[0, 1], 
                  [1, 0]])
     updated_c = Cahn_Hilliard_equation_integration(c, A, k, dx, dy, M, dt)
-    for i in range(0, N):
-      for j in range(0, N):
-         assert updated_c[j, i] >= 0. and updated_c[j, i] <= 1.
+    updated_c_validity = np.logical_and(updated_c>=0, updated_c<=1)
+    assert updated_c_validity.all()
