@@ -16,10 +16,7 @@ def test_initState_is_c_0_if_noise_is_0(N, c_0):
     c_noise=0.
     constant_array=np.full((N,N), c_0)
     initial_config=create_initial_config(N,c_0, c_noise)
-    assert np.shape(initial_config) == (N, N)
-    for i in range(0,N):
-      for j in range(0,N):
-         assert  constant_array[i,j] == initial_config[i,j]
+    assert np.array_equal(constant_array, initial_config)
 
 @given(c_0=st.floats(min_value=0, max_value=1), c_noise=st.floats(min_value=0, max_value=1), N = st.floats())
 def test_initState_fails_for_incorrect_NxNy_parameters(c_0, c_noise, N):
@@ -73,7 +70,7 @@ def test_initState_is_repeatable():
    """ This function tests that the initial config. produced by create_initial_config() is repeatable 
        
        GIVEN: fixed Nx,Ny,c_0,c_noise values
-       WHEN: they are provided two times to create_initial_config()
+       WHEN: they are provided two times to create_initial_config() and same seed is selected for each function call
        THEN: function produces the same output
        """
    N=100
@@ -81,6 +78,4 @@ def test_initState_is_repeatable():
    c_noise=0.02
    initState_1 = create_initial_config(N, c_0, c_noise)
    initState_2 = create_initial_config(N, c_0, c_noise)
-   for i in range(0,N):
-      for j in range(0,N):
-         assert  initState_1[j, i] == initState_2[j, i]
+   assert np.array_equal(initState_1, initState_2)
