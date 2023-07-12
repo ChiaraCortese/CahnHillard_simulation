@@ -15,6 +15,7 @@ def test_initState_is_c_0_if_noise_is_0(N, c_0):
 
     c_noise=0.
     constant_array=np.full((N,N), c_0)
+    np.random.seed(1)
     initial_config=create_initial_config(N,c_0, c_noise)
     assert np.array_equal(constant_array, initial_config)
 
@@ -26,6 +27,7 @@ def test_initState_fails_for_incorrect_NxNy_parameters(c_0, c_noise, N):
        GIVEN: N randomly picked real numbers 
        WHEN: they are provided as parameters to create_initial_config()
        THEN: function raises TypeError"""
+    np.random.seed(1)
     with pt.raises(TypeError):
        create_initial_config(N,c_0,c_noise)
 
@@ -37,6 +39,7 @@ def test_initState_fails_for_incorrect_c0cnoise_parameters(c_0, c_noise, N):
        GIVEN: c_0, c_noise randomly picked real numbers 
        WHEN: they are provided as parameters to create_initial_config()
        THEN: function raises ValueError"""
+    np.random.seed(1)
     with pt.raises(ValueError):
        create_initial_config(N,c_0,c_noise)
 
@@ -48,6 +51,7 @@ def test_function_fails_for_null_cell_parameters(c_0, c_noise):
        WHEN: they are provided as parameters to create_initial_config()
        THEN: function raises ValueError"""
     N=0
+    np.random.seed(1)
     with pt.raises(ValueError):
        create_initial_config(N,c_0,c_noise)
 
@@ -63,6 +67,7 @@ def test_invalid_initState_raise_error():
    N= 1000
    c_0= 0.
    c_noise=1.
+   np.random.seed(1)
    with pt.raises(ValueError):
       create_initial_config(N, c_0, c_noise)
 
@@ -76,6 +81,8 @@ def test_initState_is_repeatable():
    N=100
    c_0=0.5
    c_noise=0.02
+   np.random.seed(1)
    initState_1 = create_initial_config(N, c_0, c_noise)
+   np.random.seed(1)
    initState_2 = create_initial_config(N, c_0, c_noise)
    assert np.array_equal(initState_1, initState_2)

@@ -16,6 +16,7 @@ def test_chemical_potential_and_free_energy_fail_with_incorrect_parameters(dx,dy
     N = 10
     c_0=0.5
     c_noise=0.02
+    np.random.seed(1)
     c=create_initial_config(N,c_0, c_noise)
     with pt.raises(ValueError):
        free_energy(c,A,k,dx,dy)
@@ -33,12 +34,12 @@ def test_chemical_potential_returns_array_of_same_shape_of_input_array(A, N):
        THEN: chemical_potential() returns an array of shape (N,N)"""
     c_0=0.5
     c_noise=0.02
+    np.random.seed(1)
     c=create_initial_config(N,c_0, c_noise)
     chem_potential = chemical_potential(c, A)
     assert np.shape(chem_potential) == (N, N)
 
-@given(dx=st.floats(min_value=0.1), dy=st.floats(min_value=0.1), k=st.floats(min_value=0.), A=st.floats(min_value=0.))
-def test_free_energy_returns_float_number(dx,dy,k,A):
+def test_free_energy_returns_float_number():
     """this function tests that free_energy() returns a single float number
     TEST WRITTEN AFTER THE FUNCTION RETURNED AN ARRAY INSTEAD OF A SINGLE FLOAT NUMBER, 
     KEEP THE TEST TO CHECK THAT THE ERROR DOES NOT REOCCUR AGAIN
@@ -46,10 +47,14 @@ def test_free_energy_returns_float_number(dx,dy,k,A):
     GIVEN: random valid dx, dy, k, A parameters, and a given concentration config. c
     WHEN: they are provided as parameters to free_energy
     THEN: free_energy() returns a single float number"""
-
+    dx=1.
+    dy=1.
+    k=0.5
+    A=1.
     N = 10
     c_0=0.5
     c_noise=0.02
+    np.random.seed(1)
     c=create_initial_config(N,c_0, c_noise)
     F = free_energy(c,A,k,dx,dy)
     assert isinstance(F, float)

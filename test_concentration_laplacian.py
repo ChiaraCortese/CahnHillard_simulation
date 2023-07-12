@@ -30,6 +30,7 @@ def test_initState_fails_for_incorrect_dxdy_parameters(N, dx, dy):
     
     c_0=0.5
     c_noise=0.02
+    np.random.seed(1)
     c=create_initial_config(N,c_0, c_noise)
     with pt.raises(ValueError):
        concentration_laplacian(c,dx,dy)

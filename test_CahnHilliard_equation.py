@@ -19,6 +19,7 @@ def test_CahnHilliard_integration_fails_with_incorrect_M_dt_parametes(dx,dy,k,A,
     N = 10
     c_0=0.5
     c_noise=0.02
+    np.random.seed(1)
     c=create_initial_config(N,c_0, c_noise)
     with pt.raises(ValueError):
        Cahn_Hilliard_equation_integration(c, A, k, dx, dy, M, dt)
