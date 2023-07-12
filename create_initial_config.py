@@ -40,9 +40,9 @@ def create_initial_config(N, c_0, c_noise):
     initState = c_0 + c_noise*(0.5-rand(N, N)) 
     
     #check validity of initial configuration
-    for i in range(0,N):
-        for j in range(0,N):
-            if initState[j, i]<0 or initState[j, i]>1:
-                raise ValueError('Invalid combination of c_0 and c_noise: negative concentrations occurred')
+    initState_validity = np.logical_and(initState>=0, initState<=1)
+    #raise error if initial configuration is not valid
+    if not initState_validity.all():
+        raise ValueError('Invalid combination of c_0 and c_noise: negative concentrations occurred')
     
     return initState
