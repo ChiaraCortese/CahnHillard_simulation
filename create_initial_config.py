@@ -30,9 +30,6 @@ def create_initial_config(N, c_0, c_noise):
         raise ValueError('Unperturbed concentration must be in [0,1].')
     if c_noise < 0 or c_noise > 1:
         raise ValueError('Concentration fluctuation must be in [0,1].')
-
-    #make the initial configuration repeatable
-    np.random.seed(1)
     
     #create initial configuration with noise described by uniform distribution of mean value c_noise;
     #rand(d_0, d_1) returns array with d_0 rows and d_1 columns, 
