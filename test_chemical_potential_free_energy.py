@@ -25,6 +25,8 @@ def test_chemical_potential_and_free_energy_fail_with_incorrect_parameters(dx,dy
 def test_chemical_potential_returns_array_of_same_shape_of_input_array(A, N):
     """this function tests that chemical_potential() returns an array of shape equal 
     to the input concentration c.
+    TEST WRITTEN AFTER THE FUNCTION RETURNED AN ARRAY OF INCORRECT SHAPE, 
+    KEEP THE TEST TO CHECK THAT THE ERROR DOES NOT REOCCUR 
     
        GIVEN: A positive float number A, c elements all equal to 0.5, supercell of dimension N-by-N
        WHEN: they are provided as parameters to chemical_potential()
@@ -38,6 +40,8 @@ def test_chemical_potential_returns_array_of_same_shape_of_input_array(A, N):
 @given(dx=st.floats(min_value=0.1), dy=st.floats(min_value=0.1), k=st.floats(min_value=0.), A=st.floats(min_value=0.))
 def test_free_energy_returns_float_number(dx,dy,k,A):
     """this function tests that free_energy() returns a single float number
+    TEST WRITTEN AFTER THE FUNCTION RETURNED AN ARRAY INSTEAD OF A SINGLE FLOAT NUMBER, 
+    KEEP THE TEST TO CHECK THAT THE ERROR DOES NOT REOCCUR AGAIN
     
     GIVEN: random valid dx, dy, k, A parameters, and a given concentration config. c
     WHEN: they are provided as parameters to free_energy
@@ -66,9 +70,7 @@ def test_chemical_potential_returns_expected_values():
     chem_pot_computed = chemical_potential(c, A)
     chem_pot_expected = np.array([[0, 0],
                               [0, 0]])
-    for i in range(0,N):
-        for j in range(0,N):
-            assert chem_pot_computed[i,j] == chem_pot_expected[i,j]
+    assert np.array_equal(chem_pot_computed, chem_pot_expected)
 
 def test_free_energy_returns_expected_value():
     """this function tests that, given a precise concentration grid, free_energy() 
