@@ -16,10 +16,8 @@ def test_if_c_is_const_c_laplacian_is_0(N, dx, dy,c):
     
     c_constant=np.full((N,N), c)
     c_laplacian=concentration_laplacian(c_constant,dx,dy)
-    assert np.shape(c_laplacian) == (N, N)
-    for i in range(0,N):
-      for j in range(0,N):
-         assert  c_laplacian[i,j] == 0
+    zero_array = np.full((N,N), 0)
+    assert np.array_equal(zero_array, c_laplacian)
 
 @given(N=st.integers(min_value=2, max_value=100), dx=st.floats(max_value=0.), dy=st.floats(max_value=0.))
 def test_initState_fails_for_incorrect_dxdy_parameters(N, dx, dy):
@@ -55,6 +53,4 @@ def test_concentration_laplacian_returns_correct_values():
                            [3, 0, -3],
                            [-6, -9, -12]])
     c_laplacian = concentration_laplacian(c0, dx,dy)
-    for i in range(0,N):
-        for j in range(0,N):
-            assert  c_laplacian[i,j] == c_laplacian_expected[i,j]
+    assert np.array_equal(c_laplacian, c_laplacian_expected)
