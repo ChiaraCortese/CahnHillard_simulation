@@ -2,6 +2,7 @@ import numpy as np
 import sys as sys
 import configparser as cp
 import matplotlib.pyplot as plt
+import matplotlib.animation as animation
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 import time as time
 
@@ -11,6 +12,7 @@ config = cp.ConfigParser()
 config.read(sys.argv[1])
 
 # Destinations for image saving
+c_grid_evolution_anim = config.get('image_paths', 'c_grid_evolution_anim')
 initial_c_grid_pic = config.get('image_paths', 'initial_c_grid_pic')
 final_c_grid_pic = config.get('image_paths', 'final_c_grid_pic')
 other_variables_pic = config.get('image_paths', 'other_variables_pic')
@@ -62,21 +64,19 @@ ax1.set_title("Concentration grid: t = "+"{:.2f}".format(t_concentration[0])+" a
 
 plt.savefig(initial_c_grid_pic)
 
-#Enable interactive mode and show plot
-plt.ion()
-plt.show()
-
-for i in range(1,n_iterations):
-    #Update concentration grid plot data
+#Define function containing operations to be performed during the animation
+def animate(i):
+    #Update graph with next concentration grid in the timeline
     im.set_data(c[i])
     #Update concentration plot title
     ax1.set_title("Concentration grid: t = "+"{:.2f}".format(t_concentration[i])+" arb.units")
-    #redraw figure
-    fig.canvas.draw_idle()
-    # flush GUI events
-    fig.canvas.flush_events()
-    #Pause
-    time.sleep(0.001)
+    return im, ax1
+
+#Perform animation: plot one simulated configuration every 5, 
+# with a 5 ms pause between each frame
+anim = animation.FuncAnimation(fig, animate, frames=range(0,n_iterations,5), interval=1, repeat=False)
+#Save the animation
+anim.save(c_grid_evolution_anim)
 
 #Save final concentration grid
 plt.savefig(final_c_grid_pic)

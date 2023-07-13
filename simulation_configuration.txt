@@ -24,6 +24,7 @@ c_config_datasave: ./Data/configurations.txt
 aver_quantities_datasave: ./Data/average_parameters.txt
 
 [image_paths]
+c_grid_evolution_anim: ./Images/c_grid_evolution.gif
 initial_c_grid_pic: ./Images/initial_concentration_grid.jpg
 final_c_grid_pic: ./Images/final_concentration_grid.jpg
 other_variables_pic: ./Images/average_quantities_time_evol.jpg
