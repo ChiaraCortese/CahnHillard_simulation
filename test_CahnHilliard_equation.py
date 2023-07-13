@@ -24,7 +24,7 @@ def test_CahnHilliard_integration_fails_with_incorrect_M_dt_parametes(dx,dy,k,A,
     with pt.raises(ValueError):
        Cahn_Hilliard_equation_integration(c, A, k, dx, dy, M, dt)
 
-def test_CahnHilliard_integration_returns_expected_values():
+def test_CahnHilliard_integration_returns_initial_config_if_equlibrium_one():
      """this function tests that if the initial concentration is the equilibrium one,
        Cahn_Hilliard_equation_integration() returns as the updated concentration value the initial one,
        for each subcell, in an array of same shape of the input concentration one 
@@ -46,6 +46,29 @@ def test_CahnHilliard_integration_returns_expected_values():
      updated_c_expected = np.array([[0.5, 0.5],
                               [0.5, 0.5]])
      assert np.array_equal(updated_c_computed, updated_c_expected)
+
+def test_CahnHilliard_integration_returns_correctly_evolved_values():
+     """this function tests that Cahn_Hilliard_equation_integration() returns as updated concentration
+     values equal to manually computed ones 
+    
+    GIVEN: a 2-by-2 precise concentration grid, and A=1,M=1, k=0.5, dx=1, dy=1, dt=0.01
+    WHEN: they are provided as input parameters to Cahn_Hilliard_equation_integration(),
+    THEN: function returns a 2-by-2, 2D array with all elements equal to manually computed values 
+    (with a tolerance of 1e-8)"""
+
+     N = 2
+     A = 1
+     dx = 1
+     dy = 1
+     k = 0.5
+     M = 1
+     dt = 0.01
+     c = np.array([[0.5, 0.6],
+                  [0.6, 0.5]])
+     updated_c_computed = Cahn_Hilliard_equation_integration(c, A, k, dx, dy, M, dt)
+     updated_c_expected = np.array([[0.52816, 0.57184],
+                              [0.57184, 0.52816]])
+     assert np.allclose(updated_c_computed, updated_c_expected, rtol=1e-8)
 
 def test_CahnHilliard_integration_return_physical_output_configuration():
     """This function tests that if the concentration configuration obtained by integrating the 
