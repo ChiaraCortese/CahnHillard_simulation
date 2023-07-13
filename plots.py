@@ -73,7 +73,7 @@ def animate(i):
     return im, ax1
 
 #Perform animation: plot one simulated configuration every 5, 
-# with a 5 ms pause between each frame
+# with a 1 ms pause between each frame
 anim = animation.FuncAnimation(fig, animate, frames=range(0,n_iterations,5), interval=1, repeat=False)
 #Save the animation
 anim.save(c_grid_evolution_anim)
