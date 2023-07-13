@@ -74,7 +74,7 @@ def test_invalid_initState_raise_error():
 def test_initState_is_repeatable():
    """ This function tests that the initial config. produced by create_initial_config() is repeatable 
        
-       GIVEN: fixed Nx,Ny,c_0,c_noise values
+       GIVEN: fixed N,c_0,c_noise values
        WHEN: they are provided two times to create_initial_config() and same seed is selected for each function call
        THEN: function produces the same output
        """
@@ -86,3 +86,19 @@ def test_initState_is_repeatable():
    np.random.seed(1)
    initState_2 = create_initial_config(N, c_0, c_noise)
    assert np.array_equal(initState_1, initState_2)
+
+def test_initStat_is_physical_configuration():
+    """This function tests that if the concentration configuration obtained as output of create_initial_config() 
+    with physical input parameters has values in the interval [0,1]
+    
+       GIVEN: fixed Nx,Ny,c_0,c_noise values
+       WHEN: they are provided two times to create_initial_config()
+       THEN: function produces an N-by-N 2D array with all values in [0,1] """
+
+    N=100
+    c_0=0.5
+    c_noise=0.02
+    np.random.seed(1)
+    initState = create_initial_config(N, c_0, c_noise)
+    initState_validity = np.logical_and(initState>=0, initState<=1)
+    assert initState.all()
