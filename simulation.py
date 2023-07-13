@@ -61,48 +61,50 @@ average_c = np.sum(c)/(N*N)
 
 "-----------------------------------PREPARE FILES TO STORE SIMULATED DATA---------------------------------"
 #open file to write the simulated concentration data
-data_config_file = open(c_grid_datasave, "w")
-column_names_string = "Time "
+
+with open(c_grid_datasave, "w") as data_config_file:
+    column_names_string = "Time "
 
 #write column names
-for l in range(0, N):
-    for j in range(0, N):
-        column_names_string += "c"+str(l)+"_"+str(j)+" "
-data_config_file.write(column_names_string+"\n")
+    for l in range(0, N):
+        for j in range(0, N):
+            column_names_string += "c"+str(l)+"_"+str(j)+" "
+    data_config_file.write(column_names_string+"\n")
 
 #print initial concentration values
-data_config_file.write(str(t0))
-for l in range(0, N):
-    for j in range(0, N):
-        data_config_file.write(" "+str(c[l,j]))
-data_config_file.write("\n")
+    data_config_file.write(str(t0))
+    for l in range(0, N):
+        for j in range(0, N):
+            data_config_file.write(" "+str(c[l,j]))
+    data_config_file.write("\n")
 
 #open file to write separately average concentration, average chem. potential and free energy
-data_average_param_file = open(aver_quantities_datasave, "w")
-column_names_string = "Time AverageConcentration AverageChem.Potential FreeEnergy\n"
-data_average_param_file.write(column_names_string)
+    with open(aver_quantities_datasave, "w") as data_average_param_file:
+         column_names_string = "Time AverageConcentration AverageChem.Potential FreeEnergy\n"
+         data_average_param_file.write(column_names_string)
 
 #write initial values in file (with time indicator) 
-string_to_print = str(t0)+" "+str(average_c)+" "+str(average_chem_potential)+" "+str(free_E)+"\n"
-data_average_param_file.write(string_to_print)
+         string_to_print = str(t0)+" "+str(average_c)+" "+str(average_chem_potential)+" "+str(free_E)+"\n"
+         data_average_param_file.write(string_to_print)
 
 
 "----------------------------------------SIMULATION--------------------------------------------------------"
 # Perform time evolution with time step dt for n_iterations 
 
 for i in range(1,n_iterations+1):
-    #update time value
+        #update time value
     t = t0 + i*dt
 
     #update concentration integrating Cahn-Hilliard equation
     c = Cahn_Hilliard_equation_integration(c, A, grad_coeff, dx, dy, M, dt)
 
     #print new configuration data to file (with time indicator)
-    data_config_file.write(str(t))
-    for l in range(0, N):
-        for j in range(0, N):
-            data_config_file.write(" "+str(c[l,j]))
-    data_config_file.write("\n")
+    with open(c_grid_datasave, "a") as data_config_file:
+        data_config_file.write(str(t))
+        for l in range(0, N):
+            for j in range(0, N):
+                data_config_file.write(" "+str(c[l,j]))
+        data_config_file.write("\n")
 
     #compute physical quantities of new configuration
     average_chem_potential = np.sum(chemical_potential(c, A))/(N*N)
@@ -111,17 +113,8 @@ for i in range(1,n_iterations+1):
 
     #print physical quantities to file (with time indicator) 
     string_to_print = str(t)+" "+str(average_c)+" "+str(average_chem_potential)+" "+str(free_E)+"\n"
-    data_average_param_file.write(string_to_print)
+    with open(aver_quantities_datasave, "a") as data_average_param_file:
+        data_average_param_file.write(string_to_print)
 
     #print simulation status on the command line
     sys.stdout.write("\r Simulation running: "+"{:.1f}".format(i/n_iterations*100)+"%")
-
-#Close data files
-data_config_file.close()
-data_average_param_file.close()
-
-
-
-
-
-
