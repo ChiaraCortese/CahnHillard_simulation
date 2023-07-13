@@ -63,20 +63,20 @@ average_c = np.sum(c)/(N*N)
 #open file to write the simulated concentration data
 
 with open(c_grid_datasave, "w") as data_config_file:
-    column_names_string = "Time "
-
+    column_names_string = np.full((N*N), "Time")
+    config_data_string = np.full((N*N), str(t0))
 #write column names
     for l in range(0, N):
-        for j in range(0, N):
-            column_names_string += "c"+str(l)+"_"+str(j)+" "
-    data_config_file.write(column_names_string+"\n")
+        for j in range(1, N):
+            string = "c_{}{}".format(l,j)
+            column_names_string[l*N+j] = ''.join(string)
+    data_config_file.write(' '.join(column_names_string)+"\n")
 
 #print initial concentration values
-    data_config_file.write(str(t0))
     for l in range(0, N):
-        for j in range(0, N):
-            data_config_file.write(" "+str(c[l,j]))
-    data_config_file.write("\n")
+        for j in range(1, N):
+            config_data_string[l*N+j]=str(c[l,j])
+    data_config_file.write(' '.join(config_data_string)+'\n')
 
 #open file to write separately average concentration, average chem. potential and free energy
     with open(aver_quantities_datasave, "w") as data_average_param_file:
@@ -84,8 +84,8 @@ with open(c_grid_datasave, "w") as data_config_file:
          data_average_param_file.write(column_names_string)
 
 #write initial values in file (with time indicator) 
-         string_to_print = str(t0)+" "+str(average_c)+" "+str(average_chem_potential)+" "+str(free_E)+"\n"
-         data_average_param_file.write(string_to_print)
+         string_to_print = [str(t0),str(average_c),str(average_chem_potential),str(free_E),"\n"]
+         data_average_param_file.write(' '.join(string_to_print))
 
 
 "----------------------------------------SIMULATION--------------------------------------------------------"
@@ -100,11 +100,11 @@ for i in range(1,n_iterations+1):
 
     #print new configuration data to file (with time indicator)
     with open(c_grid_datasave, "a") as data_config_file:
-        data_config_file.write(str(t))
+        config_data_string[0]=str(t)
         for l in range(0, N):
-            for j in range(0, N):
-                data_config_file.write(" "+str(c[l,j]))
-        data_config_file.write("\n")
+             for j in range(1, N):
+                 config_data_string[l*N+j]=str(c[l,j])
+        data_config_file.write(' '.join(config_data_string)+'\n')
 
     #compute physical quantities of new configuration
     average_chem_potential = np.sum(chemical_potential(c, A))/(N*N)
@@ -112,9 +112,9 @@ for i in range(1,n_iterations+1):
     average_c = np.sum(c)/(N*N)
 
     #print physical quantities to file (with time indicator) 
-    string_to_print = str(t)+" "+str(average_c)+" "+str(average_chem_potential)+" "+str(free_E)+"\n"
+    string_to_print = [str(t),str(average_c),str(average_chem_potential),str(free_E),"\n"]
     with open(aver_quantities_datasave, "a") as data_average_param_file:
-        data_average_param_file.write(string_to_print)
+        data_average_param_file.write(' '.join(string_to_print))
 
     #print simulation status on the command line
-    sys.stdout.write("\r Simulation running: "+"{:.1f}".format(i/n_iterations*100)+"%")
+    sys.stdout.write("\r Simulation running: {:.1f}%".format(i/n_iterations*100))
