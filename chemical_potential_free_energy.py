@@ -50,7 +50,7 @@ def chemical_potential(c, A):
     as the analytical derivative of the free energy homogeneous term with respect to the concentration.
     
     Parameters:
-    c: Ny-by-Nx array of float numbers 
+    c: N-by-N 2D array of float numbers 
        concentration field of 2D microstructure formed by Nx times Ny subcells
     A: float
        multiplicative constant
@@ -64,5 +64,28 @@ def chemical_potential(c, A):
     chem_potential = 2*A*(c*((1-c)**2) - (c**2)*(1-c))
 
     return chem_potential
+
+def average_chemical_potential_and_concentration(c_grid, chem_pot_grid, N):
+    """This function computes the average chemical potential and average concentration value of a concentration configuration
+    starting from its chemical potential grid and concentration grid
+    
+    Parameters:
+    c: N-by-N 2D array of float numbers
+       concentration grid
+    chem_pot_grid: N-by-N 2D array of float numbers
+               chemical potential grid
+    N: int
+       Specifies the shape (N,N) of the chem_grid and c array
+       
+    Returns:
+    average_chem_pot: float
+                      The average chemical potential of the chemical potential grid
+    average_c: float
+                The average concentration value of the """
+    
+    average_chem_pot = np.sum(chem_pot_grid)/(N*N)
+    average_c = np.sum(c_grid)/(N*N)
+
+    return average_chem_pot, average_c
 
     

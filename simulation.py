@@ -1,7 +1,7 @@
 import numpy as np
 import sys as sys
 import configparser as cp
-from chemical_potential_free_energy import chemical_potential, free_energy
+from chemical_potential_free_energy import chemical_potential, free_energy, average_chemical_potential_and_concentration
 from CahnHilliard_equation import Cahn_Hilliard_equation_integration
 from create_initial_config import create_initial_config
 
@@ -55,9 +55,8 @@ c = create_initial_config(N, c0, c_noise)
 
 #compute initial free energy, average concentration and average chemical potential
 
-average_chem_potential = np.sum(chemical_potential(c, A))/(N*N)
+average_chem_potential, average_c = average_chemical_potential_and_concentration(c, chemical_potential(c,A), N)
 free_E = free_energy(c, A , grad_coeff, dx, dy)
-average_c = np.sum(c)/(N*N)
 
 #-----------------------------------PREPARE FILES TO STORE SIMULATED DATA---------------------------------
 #open file to write the simulated concentration data and average quantities
@@ -107,9 +106,8 @@ with open(c_grid_datasave, "w") as data_config_file, open(aver_quantities_datasa
         data_config_file.write(' '.join(config_data_string))
 
     #compute physical quantities of new configuration
-        average_chem_potential = np.sum(chemical_potential(c, A))/(N*N)
+        average_chem_potential, average_c = average_chemical_potential_and_concentration(c, chemical_potential(c, A), N)
         free_E = free_energy(c, A, grad_coeff, dx, dy)
-        average_c = np.sum(c)/(N*N)
 
     #print physical quantities to file (with time indicator) 
         string_to_print = [str(t),str(average_c),str(average_chem_potential),str(free_E),"\n"]

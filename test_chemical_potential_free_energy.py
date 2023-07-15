@@ -1,6 +1,6 @@
 import numpy as np
 from create_initial_config import create_initial_config
-from chemical_potential_free_energy import free_energy, chemical_potential
+from chemical_potential_free_energy import free_energy, chemical_potential, average_chemical_potential_and_concentration
 from hypothesis import given
 import hypothesis.strategies as st
 import pytest as pt
@@ -95,3 +95,28 @@ def test_free_energy_returns_expected_value():
     free_energy_computed = free_energy(c, A, k, dx, dy)
     free_energy_expected = 8
     assert free_energy_computed == free_energy_expected
+
+def test_average_chemical_potential_and_concentration_returns_expected_value():
+    """this function tests that, given precise chemical potential and concentration grids, 
+    average_chemical_potential_and_concentration() returns the correct values for the average chemical potential 
+    and the average concentration of the system 
+    
+    GIVEN: a chemical potential grid and a concentration grid of shape (N,N), N=2
+    WHEN: they are provided as input parameters to average_chemical_potential_and_concentration(),
+    THEN: average_chemical_potential_and_concentration() returns two floats that are exactly equal to the 
+          manually calculated values (with a tolerance of 1e-8, necessary since two floats are compared)"""
+
+    chem_pot_grid = [[2.,4.],
+                     [4.,2.]]
+    c_grid = [[0.1, 0.3],
+              [0.3, 0.1]]
+    N = 2
+
+    expected_average_chem_value = 3.
+    expecte_c_value = 0.2
+    computed_average_chem_value, computed_c_value = average_chemical_potential_and_concentration(c_grid, chem_pot_grid, N)
+    assert np.allclose(expected_average_chem_value, computed_average_chem_value, rtol=1e-8)
+    assert np.allclose(expecte_c_value, computed_c_value, rtol=1e-8)
+
+    
+
