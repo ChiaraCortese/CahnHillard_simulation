@@ -39,10 +39,11 @@ To install them automatically using pip, write in the command line **pip install
 ## Example
 
 Here is an example of the results obtained by running the simulation with the configuration in simulation_configuration.txt:
-1) Initial and final configuration
+1) Initial and final configuration, plus the concentration evolution animation
 
    <img src="/Images/initial_concentration_grid.jpg" alt="Initial concentration grid" style="height: 240px; width:320px;"/>
    <img src="/Images/final_concentration_grid.jpg" alt="Final concentration grid" style="height: 240px; width:320px;"/>
+   <img src="/Images/c_grid_evolution.gif" alt="Final concentration grid" style="height: 240px; width:320px;"/>
 
 3) Time evolution of free energy, average chemical potential and average concentration
    
