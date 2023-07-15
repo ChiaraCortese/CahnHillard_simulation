@@ -5,12 +5,12 @@ from chemical_potential_free_energy import chemical_potential, free_energy
 from CahnHilliard_equation import Cahn_Hilliard_equation_integration
 from create_initial_config import create_initial_config
 
-"-----------------------------READ SIMULATION CONFIGURATION FROM FILE------------------------------------"
+#-----------------------------READ SIMULATION CONFIGURATION FROM FILE------------------------------------
 #Import configuration parameters from simulation_configuration.txt file
 config = cp.ConfigParser()
 config.read(sys.argv[1])
 
-"-----------------------------------INITIALIZE INPUT PARAMETERS-------------------------------------------"
+#-----------------------------------INITIALIZE INPUT PARAMETERS-------------------------------------------
 # Microstructure geometry
 
 N = int(config.get('microstructure_settings', 'N'))            # number of subcells per cartesian direction
@@ -47,7 +47,7 @@ if seed_option:
 
 c_grid_datasave = config.get('data_paths', 'c_config_datasave')
 aver_quantities_datasave = config.get('data_paths', 'aver_quantities_datasave')
-"----------------------------------CREATE INITIAL STATE--------------------------------------------------------"
+#----------------------------------CREATE INITIAL STATE--------------------------------------------------------
 
 # Build initial microstructure concentration grid
 
@@ -59,62 +59,61 @@ average_chem_potential = np.sum(chemical_potential(c, A))/(N*N)
 free_E = free_energy(c, A , grad_coeff, dx, dy)
 average_c = np.sum(c)/(N*N)
 
-"-----------------------------------PREPARE FILES TO STORE SIMULATED DATA---------------------------------"
-#open file to write the simulated concentration data
+#-----------------------------------PREPARE FILES TO STORE SIMULATED DATA---------------------------------
+#open file to write the simulated concentration data and average quantities
 
-with open(c_grid_datasave, "w") as data_config_file:
-    column_names_string = np.full((N*N), "Time")
-    config_data_string = np.full((N*N), str(t0))
+with open(c_grid_datasave, "w") as data_config_file, open(aver_quantities_datasave, "w") as data_average_param_file:
+    column_names_string = ["Time"]
+    config_data_string = [str(t0)]
 #write column names
     for l in range(0, N):
-        for j in range(1, N):
-            string = "c_{}{}".format(l,j)
-            column_names_string[l*N+j] = ''.join(string)
-    data_config_file.write(' '.join(column_names_string)+"\n")
+        for j in range(0, N):
+            column_names_string.append(f"c_{l}_{j}")
+    column_names_string.append('\n')
+    data_config_file.write(' '.join(column_names_string))
 
 #print initial concentration values
     for l in range(0, N):
-        for j in range(1, N):
-            config_data_string[l*N+j]=str(c[l,j])
-    data_config_file.write(' '.join(config_data_string)+'\n')
+        for j in range(0, N):
+            config_data_string.append(str(c[l,j]))
+    config_data_string.append('\n')
+    data_config_file.write(' '.join(config_data_string))
 
 #open file to write separately average concentration, average chem. potential and free energy
-    with open(aver_quantities_datasave, "w") as data_average_param_file:
-         column_names_string = "Time AverageConcentration AverageChem.Potential FreeEnergy\n"
-         data_average_param_file.write(column_names_string)
+    column_names_string = "Time AverageConcentration AverageChem.Potential FreeEnergy\n"
+    data_average_param_file.write(column_names_string)
 
 #write initial values in file (with time indicator) 
-         string_to_print = [str(t0),str(average_c),str(average_chem_potential),str(free_E),"\n"]
-         data_average_param_file.write(' '.join(string_to_print))
+    string_to_print = [str(t0),str(average_c),str(average_chem_potential),str(free_E),"\n"]
+    data_average_param_file.write(' '.join(string_to_print))
 
 
-"----------------------------------------SIMULATION--------------------------------------------------------"
+#----------------------------------------SIMULATION--------------------------------------------------------
 # Perform time evolution with time step dt for n_iterations 
 
-for i in range(1,n_iterations+1):
+    for i in range(1,n_iterations+1):
         #update time value
-    t = t0 + i*dt
+        t = t0 + i*dt
 
     #update concentration integrating Cahn-Hilliard equation
-    c = Cahn_Hilliard_equation_integration(c, A, grad_coeff, dx, dy, M, dt)
+        c = Cahn_Hilliard_equation_integration(c, A, grad_coeff, dx, dy, M, dt)
 
     #print new configuration data to file (with time indicator)
-    with open(c_grid_datasave, "a") as data_config_file:
-        config_data_string[0]=str(t)
+        config_data_string = [str(t)]
         for l in range(0, N):
-             for j in range(1, N):
-                 config_data_string[l*N+j]=str(c[l,j])
-        data_config_file.write(' '.join(config_data_string)+'\n')
+            for j in range(0, N):
+                config_data_string.append(str(c[l,j]))
+        config_data_string.append('\n')
+        data_config_file.write(' '.join(config_data_string))
 
     #compute physical quantities of new configuration
-    average_chem_potential = np.sum(chemical_potential(c, A))/(N*N)
-    free_E = free_energy(c, A, grad_coeff, dx, dy)
-    average_c = np.sum(c)/(N*N)
+        average_chem_potential = np.sum(chemical_potential(c, A))/(N*N)
+        free_E = free_energy(c, A, grad_coeff, dx, dy)
+        average_c = np.sum(c)/(N*N)
 
     #print physical quantities to file (with time indicator) 
-    string_to_print = [str(t),str(average_c),str(average_chem_potential),str(free_E),"\n"]
-    with open(aver_quantities_datasave, "a") as data_average_param_file:
+        string_to_print = [str(t),str(average_c),str(average_chem_potential),str(free_E),"\n"]
         data_average_param_file.write(' '.join(string_to_print))
 
     #print simulation status on the command line
-    sys.stdout.write("\r Simulation running: {:.1f}%".format(i/n_iterations*100))
+        sys.stdout.write("\r Simulation running: {:.1f}%".format(i/n_iterations*100))
